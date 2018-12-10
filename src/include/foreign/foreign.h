@@ -67,15 +67,49 @@ typedef struct ForeignTable
 	List	   *options;		/* ftoptions as DefElem list */
 } ForeignTable;
 
+/*
+ * 以下是各种方便的FDW工具函数
+ */
 
+/**
+ * 通过serverOID, 获取ForeignServer对象
+ */
 extern ForeignServer *GetForeignServer(Oid serverid);
+
+/**
+ * 通过Foreign Server的名称, 获取Foreign Server对象.
+ * 如果missing_ok == true, 根据指定的Foreign Server名称, 没有找到对应的Foreign Server对象, 返回NULL,
+ * 否则报错
+ */
 extern ForeignServer *GetForeignServerByName(const char *name, bool missing_ok);
+
+/**
+ * 通过用户Oid和ServerOID, 返回UserMapping对象
+ */
 extern UserMapping *GetUserMapping(Oid userid, Oid serverid);
+
+/**
+ * 通过fdw的OID, 获取FDW
+ */
 extern ForeignDataWrapper *GetForeignDataWrapper(Oid fdwid);
+
+/**
+ *  根据FDW的名称, 返回ForeignDataWrapper对象
+ *  如果missing_ok == true, 根据指定的FDW名称, 没有找到对应的FDW对象, 返回NULL,
+ *  否则报错
+ */
 extern ForeignDataWrapper *GetForeignDataWrapperByName(const char *name,
 							bool missing_ok);
+
+/**
+ * 通过Foreign表的OID, 返回ForeignTable对象
+ */
 extern ForeignTable *GetForeignTable(Oid relid);
 
+/**
+ * 返回Foreign表的某个字段的所有选项值
+ * 返回的是DelElem组成的list, 如果对应的字段没有option, 返回NIL
+ */
 extern List *GetForeignColumnOptions(Oid relid, AttrNumber attnum);
 
 extern Oid	get_foreign_data_wrapper_oid(const char *fdwname, bool missing_ok);
